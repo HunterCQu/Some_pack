@@ -1,0 +1,80 @@
+1.简单阈值化：
+
+
+代码：
+*************************************************
+import cv2
+import numpy as np
+import matplotlib.pylab  as plt
+
+img = cv2.imread('H_map_4.png',0)
+ret,thresh1 = cv2.threshold(img,55,255,cv2.THRESH_BINARY)
+ret,thresh2 = cv2.threshold(img,55,255,cv2.THRESH_BINARY_INV)
+ret,thresh3 = cv2.threshold(img,55,255,cv2.THRESH_TRUNC)
+ret,thresh4 = cv2.threshold(img,55,255,cv2.THRESH_TOZERO)
+ret,thresh5 = cv2.threshold(img,55,255,cv2.THRESH_TOZERO_INV)
+
+titles = ['Original Image','BINARY','BINARY_INV','TRUNC','TOZERO','TOZERO_INV']
+images = [img, thresh1, thresh2, thresh3, thresh4, thresh5]
+
+for i in range(6):
+    plt.subplot(2,3,i+1),plt.imshow(images[i],'gray')
+    plt.title(titles[i])
+    plt.xticks([]),plt.yticks([])
+
+plt.show()
+
+***************************************************
+参数说明：
+
+cv2.THRESH_BINARY	如果 src(x,y)>threshold ,dst(x,y) = max_value; 否则,dst（x,y）=0
+cv2.THRESH_BINARY_INV	如果 src(x,y)>threshold,dst(x,y) = 0; 否则,dst(x,y) = max_value
+cv2.THRESH_TRUNC		如果 src(x,y)>threshold，dst(x,y) = max_value; 否则dst(x,y) = src(x,y)
+cv2.THRESH_TOZERO	如果src(x,y)>threshold，dst(x,y) = src(x,y) ; 否则 dst(x,y) = 0
+cv2.THRESH_TOZERO_INV	如果 src(x,y)>threshold，dst(x,y) = 0 ; 否则dst(x,y) = src(x,y)
+*********************************************************************   end
+
+
+2.自适应阈值化
+
+
+代码：
+***************************************************
+import cv2
+import numpy as np
+import matplotlib.pylab  as plt
+
+img = cv2.imread('img.jpg',0)
+img = cv2.medianBlur(img,5)
+
+ret,th1 = cv2.threshold(img,127,255,cv2.THRESH_BINARY)
+th2 = cv2.adaptiveThreshold(img,255,cv2.ADAPTIVE_THRESH_MEAN_C,\
+            cv2.THRESH_BINARY,11,2)
+th3 = cv2.adaptiveThreshold(img,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
+            cv2.THRESH_BINARY,11,2)
+
+titles = ['Original Image', 'Global Thresholding (v = 127)',
+            'Adaptive Mean Thresholding', 'Adaptive Gaussian Thresholding']
+images = [img, th1, th2, th3]
+
+for i in range(4):
+    plt.subplot(2,2,i+1),plt.imshow(images[i],'gray')
+    plt.title(titles[i])
+    plt.xticks([]),plt.yticks([])
+plt.show()
+
+**************************************************
+参数说明：
+
+cv2.adaptiveThreshold(src, maxValue, adaptiveMethod, thresholdType, blockSize, C[, dst])
+adaptiveMethod:决定如何计算阈值
+
+cv2.ADAPTIVE_THRESH_MEAN_C:阈值是邻域的平均值
+
+cv2.ADAPTIVE_THRESH_GAUSSIAN_C:阈值是邻域值的加权和，其中权重是高斯窗口
+
+blockSize:决定了邻域的大小
+C:从计算的平均值或加权平均值中减去的常数
+
+********************************************************************   end
+
